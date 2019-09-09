@@ -7,6 +7,9 @@ A project repository template that builds SourceMod plugins with [Ninja][].
 ## Setup
 
 1. [Use this template][] to create a new repository.
+	- If you have an existing repository, you may want to instead copy `configure.py` and
+	`misc/ninja_syntax.py`, as well as create / update your `.gitignore` to exclude generated
+	outputs (see this repository's version).
 2. Set up a project.
 	- Create script(s) in the `scripting/` directory.
 	- Add script(s) to the `plugins` list in the `configure.py` file.
