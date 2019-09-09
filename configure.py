@@ -43,7 +43,7 @@ with contextlib.closing(ninja_syntax.Writer(open('build.ninja', 'wt'))) as build
 		'configure_args': sys.argv[1:],
 		'root': '.',
 		'builddir': 'build',
-		'spcomp': os.path.join(args.spcomp_dir, 'spcomp.exe'),
+		'spcomp': spcomp,
 		'spcflags': '-i${root}/scripting/include -h -v0'
 	}
 	
