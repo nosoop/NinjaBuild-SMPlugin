@@ -7,9 +7,11 @@ plugins = [
 
 # files to copy to builddir, relative to root
 # plugin names from previous list will be copied automatically
-copy_files = [
-	
-]
+copy_files = [ ]
+
+# additional directories for sourcepawn include lookup
+# `scripting/include` is explicitly included
+include_dirs = [ ]
 
 # required version of spcomp (presumably pinned to SM version)
 spcomp_min_version = (1, 9)
@@ -55,8 +57,10 @@ with contextlib.closing(ninja_syntax.Writer(open('build.ninja', 'wt'))) as build
 		'root': '.',
 		'builddir': 'build',
 		'spcomp': spcomp,
-		'spcflags': '-i${root}/scripting/include -h -v0'
+		'spcflags': [ '-i${root}/scripting/include', '-h', '-v0' ]
 	}
+	
+	vars['spcflags'] += ('-i{}'.format(d) for d in include_dirs)
 	
 	for key, value in vars.items():
 		build.variable(key, value)
