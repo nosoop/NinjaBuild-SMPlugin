@@ -20,6 +20,7 @@ A project repository template that builds SourceMod plugins with [Ninja][].
 directory containing the SourcePawn compiler (`spcomp`) and SourceMod's base include files.
 If `--spcomp-dir` isn't specified, the script will try to detect the compiler from your path.
 5. Run `ninja`.  Files will be generated and copied to `build/`, creating any intermediate
-folders if they don't exist.  Re-run `ninja` whenever you make changes.
+folders if they don't exist.  Re-run `ninja` whenever you make changes; it will also reconfigure
+the build if `configure.py` is modified.
 
 [Use this template]: https://github.com/nosoop/NinjaBuild-SMPlugin/generate
