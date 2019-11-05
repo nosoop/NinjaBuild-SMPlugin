@@ -11,11 +11,15 @@ copy_files = [
 	
 ]
 
+# required version of spcomp (presumably pinned to SM version)
+spcomp_min_version = (1, 9)
+
 ########################
 # build.ninja script generation below.
 
 import contextlib
 import misc.ninja_syntax as ninja_syntax
+import misc.spcomp_util
 import os
 import sys
 import argparse
@@ -32,7 +36,14 @@ print("""Checking for SourcePawn compiler...""")
 spcomp = shutil.which('spcomp', path = args.spcomp_dir)
 if not spcomp:
 	raise FileNotFoundError('Could not find SourcePawn compiler.')
-print('Found SourcePawn compiler at', os.path.abspath(spcomp))
+
+available_version = misc.spcomp_util.extract_version(spcomp)
+version_string = '.'.join(map(str, available_version))
+print('Found SourcePawn compiler version', version_string, 'at', os.path.abspath(spcomp))
+
+if spcomp_min_version > available_version:
+	raise ValueError("Failed to meet required compiler version "
+			+ '.'.join(map(str, spcomp_min_version)))
 
 with contextlib.closing(ninja_syntax.Writer(open('build.ninja', 'wt'))) as build:
 	build.comment('This file is used to build SourceMod plugins with ninja.')
