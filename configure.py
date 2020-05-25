@@ -36,6 +36,9 @@ args = parser.parse_args()
 
 print("""Checking for SourcePawn compiler...""")
 spcomp = shutil.which('spcomp', path = args.spcomp_dir)
+if 'x86_64' in platform.machine():
+	# Use 64-bit spcomp if architecture supports it
+	spcomp = shutil.which('spcomp64', path = args.spcomp_dir) or spcomp
 if not spcomp:
 	raise FileNotFoundError('Could not find SourcePawn compiler.')
 
