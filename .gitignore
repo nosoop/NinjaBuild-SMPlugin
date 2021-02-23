@@ -8,3 +8,7 @@
 **/__pycache__
 build/
 build.ninja
+
+# Ignore personal configuration files copied from contrib
+/modd.conf
+/uploader.ini
