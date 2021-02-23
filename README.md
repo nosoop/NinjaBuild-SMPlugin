@@ -6,6 +6,8 @@ A project repository template that builds SourceMod plugins with [Ninja][].
 
 ## Setup
 
+Make sure to read over and download the things specified in the [Prerequisites][] page.
+
 1. [Use this template][] to create a new repository.
 	- If you have an existing repository, you may want to instead copy `configure.py` and
 	`misc/`, as well as create / update your `.gitignore` to exclude generated outputs
@@ -19,6 +21,9 @@ A project repository template that builds SourceMod plugins with [Ninja][].
 	- Look over the rest of `configure.py` and modify settings to your liking.
 	- Update / remove this `README` file!  You'll want to provide building steps similar to the
 	ones below.
+
+[Prerequisites]: https://github.com/nosoop/NinjaBuild-SMPlugin/wiki/Prerequisites
+[Use this template]: https://github.com/nosoop/NinjaBuild-SMPlugin/generate
 
 ## Building
 
@@ -34,5 +39,3 @@ This will create the `build.ninja` script.
 2. Run `ninja`.  Files will be generated and copied to `build/`, creating any intermediate
 folders if they don't exist.  Re-run `ninja` whenever you make changes; it will also reconfigure
 the build if `configure.py` is modified.
-
-[Use this template]: https://github.com/nosoop/NinjaBuild-SMPlugin/generate
