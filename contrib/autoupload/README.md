@@ -7,12 +7,15 @@ This directory contains files that can help developers automate:
 
 ## Requirements
 
-- `modd`, a single-binary utility that runs a simple command whenever files change.  This is
+- [`modd`][], a single-binary utility that runs a simple command whenever files change.  This is
 used to invoke `ninja` and keep our daemon script running.
-- `watchdog`, a Python library to monitor filesystem changes.  This is used in the daemon to
+- [`watchdog`][], a Python library to monitor filesystem changes.  This is used in the daemon to
 detect changed built outputs.
   - At some point I may switch to implementing `modd`'s functionality within the daemon itself,
   but for now this is fine for getting things up and running.
+
+[`modd`]: https://github.com/cortesi/modd/
+[`watchdog`]: https://pypi.org/project/watchdog/
 
 ## Configuration
 
