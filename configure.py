@@ -2,7 +2,7 @@
 
 # plugin names, relative to `scripting/`
 plugins = [
-	# 'sample_plugin.sp',
+	'sample_plugin.sp',
 ]
 
 # files to copy to builddir, relative to root
@@ -11,7 +11,9 @@ copy_files = [ ]
 
 # additional directories for sourcepawn include lookup
 # `scripting/include` is explicitly included
-include_dirs = [ ]
+include_dirs = [
+	# 'third_party/vendored'
+]
 
 # required version of spcomp (presumably pinned to SM version)
 spcomp_min_version = (1, 9)
