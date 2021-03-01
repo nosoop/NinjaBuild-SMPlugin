@@ -24,11 +24,7 @@ import configparser
 import threading
 
 def is_subpath_of(src_path, parent_path):
-	abs_src_path = src_path.resolve()
-	abs_parent_path = parent_path.resolve()
-	if len(src_path.parts) < len(parent_path.parts):
-		return False
-	return all(s == p for s, p in zip(abs_src_path.parts, abs_parent_path.parts))
+	return parent_path.resolve() in src_path.resolve().parents
 
 class UploadingEventHandler(watchdog.events.FileSystemEventHandler):
 	def __init__(self, config, rootdir):
