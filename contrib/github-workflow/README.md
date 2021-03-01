@@ -6,5 +6,5 @@ build.
 
 ## Configuration
 
-1.  Copy `build.yml` to `.github/workflows/`.
+1.  Copy the desired `build-*.yml` to `.github/workflows/`.  You may rename it if desired.
 2.  Modify to suit your needs.

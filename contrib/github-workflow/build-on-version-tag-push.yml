@@ -1,3 +1,4 @@
+# Builds when a version tag is pushed.
 name: Build Workflow
 
 on:
