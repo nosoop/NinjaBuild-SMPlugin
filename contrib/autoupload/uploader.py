@@ -21,6 +21,8 @@ import subprocess
 
 import configparser
 
+import threading
+
 def is_subpath_of(src_path, parent_path):
 	abs_src_path = src_path.resolve()
 	abs_parent_path = parent_path.resolve()
@@ -36,6 +38,9 @@ class UploadingEventHandler(watchdog.events.FileSystemEventHandler):
 		
 		# sort paths in descending order to ensure longer paths take priority
 		self.path_mapping_keys = sorted(config['path_mappings'].keys(), key = pathlib.Path, reverse = True)
+		
+		# debounce mapping; track subprocesses that are waiting to run
+		self.pending_procs = {}
 		
 		# write to stderr; modd doesn't record stdout
 		print(f"Monitoring paths within '{self.rootdir}':", self.path_mapping_keys, file = sys.stderr)
@@ -69,9 +74,21 @@ class UploadingEventHandler(watchdog.events.FileSystemEventHandler):
 		upload_command = string.Template(self.config.get("uploader", "command"))
 		command_args = shlex.split(upload_command.substitute({'in': src, 'out': dest}))
 		
-		print('>>', shlex.join(command_args), file = sys.stderr)
-		proc = subprocess.run(command_args)
-		print(f'Process exited with code {proc.returncode}', file = sys.stderr)
+		def proc():
+			print('>>', shlex.join(command_args), file = sys.stderr)
+			proc = subprocess.run(command_args)
+			print(f'Process exited with code {proc.returncode}', file = sys.stderr)
+		
+		# debounce on_modified events based on the src_path
+		# not sure if this bug stems specifically from watchdog or windows
+		# adapted from https://gist.github.com/walkermatt/2871026
+		entry = event.src_path
+		try:
+			self.pending_procs[entry].cancel()
+		except (KeyError):
+			pass
+		self.pending_procs[entry] = threading.Timer(1, proc)
+		self.pending_procs[entry].start()
 
 if __name__ == "__main__":
 	path = sys.argv[1] if len(sys.argv) > 1 else '.'
