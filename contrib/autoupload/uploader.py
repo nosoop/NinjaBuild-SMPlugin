@@ -22,6 +22,7 @@ import subprocess
 import configparser
 
 import threading
+import multiprocessing.pool
 
 def is_subpath_of(src_path, parent_path):
 	return parent_path.resolve() in src_path.resolve().parents
@@ -37,6 +38,13 @@ class UploadingEventHandler(watchdog.events.FileSystemEventHandler):
 		
 		# debounce mapping; track subprocesses that are waiting to run
 		self.pending_procs = {}
+		
+		# limit number of upload processes to prevent flooding target
+		max_procs = config.getint("uploader", "max_procs", fallback = 0)
+		
+		self.upload_pool = None
+		if max_procs > 0:
+			self.upload_pool = multiprocessing.pool.ThreadPool(max_procs)
 		
 		# write to stderr; modd doesn't record stdout
 		print(f"Monitoring paths within '{self.rootdir}':", self.path_mapping_keys, file = sys.stderr)
@@ -83,7 +91,11 @@ class UploadingEventHandler(watchdog.events.FileSystemEventHandler):
 			self.pending_procs[entry].cancel()
 		except (KeyError):
 			pass
-		self.pending_procs[entry] = threading.Timer(1, proc)
+		
+		if self.upload_pool:
+			self.pending_procs[entry] = threading.Timer(1, lambda: self.upload_pool.apply_async(proc))
+		else:
+			self.pending_procs[entry] = threading.Timer(1, proc)
 		self.pending_procs[entry].start()
 
 if __name__ == "__main__":
