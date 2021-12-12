@@ -58,7 +58,8 @@ with contextlib.closing(ninja_syntax.Writer(open('build.ninja', 'wt'))) as build
 	build.newline()
 	
 	vars = {
-		'configure_args': sys.argv[1:],
+		'configure_args': ' '.join(f'--{k.replace( "_", "-")} \"{v}\"' for k, v in vars(args).items()), # this is ugly but essentially this looks through all the arguments, adds quotes around the value of the argument, and changes underscores to dashes in the name of the argument 
+		# this is so that command line arguments that contain directories with spaces are correctly preserved in the build file
 		'root': '.',
 		'builddir': 'build',
 		'spcomp': spcomp,
