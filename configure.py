@@ -59,13 +59,13 @@ with contextlib.closing(ninja_syntax.Writer(open('build.ninja', 'wt'))) as build
 	
 	vars = {
 		'configure_args': sys.argv[1:],
-		'root': '.',
+		'root': sys.path[0],
 		'builddir': 'build',
 		'spcomp': spcomp,
 		'spcflags': [ '-i${root}/scripting/include', '-h', '-v0' ]
 	}
 	
-	vars['spcflags'] += ('-i{}'.format(d) for d in include_dirs)
+	vars['spcflags'] += (f'-i{sys.path[0]}/{d}' for d in include_dirs)
 	
 	for key, value in vars.items():
 		build.variable(key, value)
