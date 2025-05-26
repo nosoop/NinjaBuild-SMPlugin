@@ -35,6 +35,8 @@ import subprocess
 parser = argparse.ArgumentParser('Configures the project.')
 parser.add_argument('--spcomp-dir',
 		help = 'Directory with the SourcePawn compiler.  Will check PATH if not specified.')
+parser.add_argument('--build-dir',
+		help = 'Directory to put build files. Will be ./build if not specified.')
 
 args = parser.parse_args()
 
@@ -68,7 +70,7 @@ with contextlib.closing(ninja_syntax.Writer(open('build.ninja', 'wt'))) as build
 	vars = {
 		'configure_args': arg_list(sys.argv[1:]),
 		'root': '.',
-		'builddir': 'build',
+		'builddir': args.build_dir or 'build',
 		'spcomp': spcomp,
 		'spcflags': [ '-i${root}/scripting/include', '-h', '-v0' ]
 	}
